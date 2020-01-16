@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 
-export class App extends Component {
+class App extends Component {
   state = {
     isLoading: true,
     coffeeShops: []
@@ -11,7 +11,7 @@ export class App extends Component {
     const response = await fetch("/api/coffeeshops");
     const body = await response.json();
     this.setState({
-      coffeeShops: body._embedded.coffeeShops,
+      coffeeShops: body._embedded.coffeeshops,
       isLoading: false
     });
   }
