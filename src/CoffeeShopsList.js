@@ -2,49 +2,45 @@ import React, { Component } from "react";
 import { Alert, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 
-const CoffeeShop = props => {
+const CoffeeShop = props => (
   <div className="coffeeshop-container p-2 m-2 d-flex flex-column">
     <h3>{props.name}</h3>
     <div className="coffeeshop-body">
       <div className="subtitle-container">
         <div>Cost: ${props.priceOfCoffee} / cup</div>
-        <div>Internet Reliability: {props.internetReliability} / 5</div>
+        <div>Internet Reliability: {props.internetReliability} / 5 </div>
         <div>
-          {props.powerAccessible ? "Power Accessible" : "Power NOT Accessible"}
+          {props.powerAccessible ? "Power Accessible" : "Power NOT Accessible"}{" "}
         </div>
       </div>
       <div>{props.address}</div>
       <div>{props.phone}</div>
     </div>
     <div className="coffeeshop-footer">
-      <Button color="secondary" tag={Link} to={"/coffee-shops" + props.id}>
-        {" "}
-        Edit{" "}
+      <Button color="secondary" tag={Link} to={"/coffee-shops/" + props.id}>
+        Edit
       </Button>
       <Button color="danger" onClick={() => props.remove(props.id)}>
         Delete
       </Button>
     </div>
-  </div>;
-};
+  </div>
+);
 
-export class CoffeeShopsList extends Component {
+class CoffeeShopsList extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      coffeeShop: [],
+      coffeeShops: [],
       isLoading: true,
       errorMessage: null
     };
-
     this.remove = this.remove.bind(this);
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
     const response = await this.props.api.getAll();
-
     if (!response.ok) {
       this.setState({
         errorMessage: `Failed to load coffee shops: ${response.status} ${response.statusText}`,
@@ -54,7 +50,7 @@ export class CoffeeShopsList extends Component {
       const body = await response.json();
       const coffeeShops = body._embedded.coffeeshops;
       this.setState({
-        coffeeShops,
+        coffeeShops: coffeeShops,
         isLoading: false,
         errorMessage: null
       });
@@ -63,20 +59,15 @@ export class CoffeeShopsList extends Component {
 
   async remove(id) {
     let response = await this.props.api.delete(id);
-
     if (!response.ok) {
       this.setState({
-        errorMessage: `Failed to load coffee shops: ${response.status} ${response.statusText}`,
-        isLoading: false
+        errorMessage: `Failed to delete coffee shop: ${response.status} ${response.statusText}`
       });
     } else {
       let updatedCoffeeShops = [...this.state.coffeeShops].filter(
-        i => i.id != id
+        i => i.id !== id
       );
-      this.setState({
-        coffeeShops: updatedCoffeeShops,
-        errorMessage: null
-      });
+      this.setState({ coffeeShops: updatedCoffeeShops, errorMessage: null });
     }
   }
 
@@ -90,11 +81,11 @@ export class CoffeeShopsList extends Component {
     return (
       <div>
         {this.props.navbar}
-        <div className="d-flex flex-grow justify-content-between p-3">
+        <div className="d-flex flex-row justify-content-between p-3">
           <h3 className="coffee-shops-title">Coffee Shops</h3>
           <Button color="success" tag={Link} to="/coffee-shops/new">
             Add New
-          </Button>{" "}
+          </Button>
         </div>
         {errorMessage ? (
           <div className="d-flex flex-row justify-content-center">
