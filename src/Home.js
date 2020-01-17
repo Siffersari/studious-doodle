@@ -3,19 +3,33 @@ import "./App.css";
 import { Link } from "react-router-dom";
 import { Button, Container } from "reactstrap";
 
-export class Home extends Component {
+class Home extends Component {
   render() {
+    if (this.props.authenticated === null) {
+      return <p>Loading...</p>;
+    }
+
     return (
       <div className="app">
         {this.props.navbar}
         <Container fluid>
-          <div>
-            <Button color="secondary">
-              <Link className="app-link" to="/coffee-shops">
+          {this.props.authenticated ? (
+            <div>
+              <p>Welcome, {this.props.user.name}</p>
+              <Button color="secondary">
+                <Link className="app-link" to="/coffee-shops">
+                  Manage Coffee Shops
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <p>Please log in to manage coffee shops.</p>
+              <Button color="secondary" disabled={true}>
                 Manage Coffee Shops
-              </Link>
-            </Button>
-          </div>
+              </Button>
+            </div>
+          )}
         </Container>
       </div>
     );
