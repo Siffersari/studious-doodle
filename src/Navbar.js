@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Button,
   Collapse,
   Nav,
   Navbar,
@@ -10,13 +11,10 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
-export class NavBar extends Component {
+class NavBar extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isOpen: false
-    };
+    this.state = { isOpen: false };
     this.toggle = this.toggle.bind(this);
   }
 
@@ -27,8 +25,10 @@ export class NavBar extends Component {
   }
 
   render() {
+    const { isAuthenticated, login, logout } = this.props;
+
     return (
-      <Navbar color="ligth" light expand="md">
+      <Navbar color="light" light expand="md">
         <NavbarBrand tag={Link} to="/">
           Home
         </NavbarBrand>
@@ -38,6 +38,19 @@ export class NavBar extends Component {
             <NavItem>
               <NavLink href="https://twitter.com/oktadev">@oktadev</NavLink>
             </NavItem>
+            {!isAuthenticated ? (
+              <NavItem>
+                <Button color="secondary" outline onClick={login}>
+                  Login
+                </Button>
+              </NavItem>
+            ) : (
+              <NavItem>
+                <Button color="secondary" outline onClick={logout}>
+                  Logout
+                </Button>
+              </NavItem>
+            )}
           </Nav>
         </Collapse>
       </Navbar>
